@@ -2,7 +2,7 @@
 // Today is... - Service Worker
 // ===========================
 
-const CACHE_NAME = 'today-is-v1';
+const CACHE_NAME = 'today-is-v3';
 
 // 캐시할 파일 목록
 const CACHE_FILES = [
