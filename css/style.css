@@ -1,0 +1,400 @@
+/* ===========================
+   CSS 변수 (라이트 모드 기본값)
+   =========================== */
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text: #1a1a1a;
+  --text-secondary: #666666;
+  --border: #e0e0e0;
+  --primary: #1a1a1a;
+  --primary-text: #ffffff;
+  --star: #f5a623;
+  --radius: 12px;
+  --font-size: 15px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 다크모드 */
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --bg-secondary: #2a2a2a;
+  --text: #f0f0f0;
+  --text-secondary: #999999;
+  --border: #3a3a3a;
+  --primary: #f0f0f0;
+  --primary-text: #1a1a1a;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ===========================
+   리셋 & 기본
+   =========================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: var(--font-size);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 글자 크기 단계 */
+[data-font="small"]  { --font-size: 13px; }
+[data-font="medium"] { --font-size: 15px; }
+[data-font="large"]  { --font-size: 17px; }
+
+ul { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ===========================
+   앱 레이아웃
+   =========================== */
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+/* ===========================
+   헤더
+   =========================== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.header-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ===========================
+   버튼 공통
+   =========================== */
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.btn-icon:hover { background: var(--bg-secondary); }
+
+.btn-primary {
+  padding: 8px 20px;
+  background: var(--primary);
+  color: var(--primary-text);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.btn-primary:hover { opacity: 0.85; }
+
+/* ===========================
+   메인 화면
+   =========================== */
+#main-view {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 화면 전환 */
+.view { display: none; }
+.view.active { display: flex; flex-direction: column; flex: 1; }
+
+/* ===========================
+   날짜 섹션
+   =========================== */
+.date-section { }
+
+.today-date {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ===========================
+   에디터 섹션
+   =========================== */
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.memo-input {
+  width: 100%;
+  min-height: 140px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-size: var(--font-size);
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.memo-input:focus { border-color: var(--primary); }
+
+.editor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-star { color: var(--text-secondary); }
+.btn-star.active svg { fill: var(--star); stroke: var(--star); }
+
+/* ===========================
+   검색 & 필터 섹션
+   =========================== */
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-filter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.btn-filter.active {
+  border-color: var(--star);
+  color: var(--star);
+}
+
+.btn-filter.active svg { fill: var(--star); stroke: var(--star); }
+
+.search-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.btn-search {
+  padding: 8px 12px;
+  color: var(--text-secondary);
+}
+
+/* ===========================
+   Todo 섹션
+   =========================== */
+.todo-section { }
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ===========================
+   메모 목록
+   =========================== */
+.memo-list-section { flex: 1; }
+
+.memo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.memo-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.memo-card:active { transform: scale(0.98); }
+
+.memo-card-text {
+  font-size: var(--font-size);
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.memo-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.memo-card-date {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.memo-card-star svg {
+  width: 14px;
+  height: 14px;
+}
+
+.memo-card-star.active svg { fill: var(--star); stroke: var(--star); }
+
+/* ===========================
+   더보기 메뉴
+   =========================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 200;
+}
+
+.more-menu {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 201;
+  min-width: 180px;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--text);
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.menu-item:hover { background: var(--bg-secondary); }
+
+.menu-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.font-size-wrap {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.font-size-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.font-size-btns button {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text);
+  transition: all 0.15s;
+}
+
+.font-size-btns button.active {
+  background: var(--primary);
+  color: var(--primary-text);
+  border-color: var(--primary);
+}
+
+/* ===========================
+   유틸리티
+   =========================== */
+.hidden { display: none !important; }
+
+/* 토스트 알림 */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--primary);
+  color: var(--primary-text);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }

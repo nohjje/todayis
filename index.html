@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Today is... - 오늘의 메모와 할 일을 기록하는 PWA 메모장">
+
+  <title>Today is...</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- 앱 아이콘 -->
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+  <!-- Pretendard 폰트 -->
+  <link rel="stylesheet" href="public/fonts/pretendard/pretendard.css">
+
+  <!-- 스타일시트 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 메인 앱 컨테이너 -->
+  <div id="app">
+
+    <!-- 헤더 -->
+    <header class="header">
+      <div class="header-left">
+        <span class="app-title">Today is...</span>
+      </div>
+      <div class="header-right">
+        <button id="install-btn" class="btn-icon" hidden aria-label="앱 설치">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v13M7 11l5 5 5-5M4 18h16"/>
+          </svg>
+        </button>
+        <button id="menu-btn" class="btn-icon" aria-label="더보기 메뉴">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 메인 화면 -->
+    <main id="main-view" class="view active">
+
+      <!-- 날짜 표시 -->
+      <section class="date-section">
+        <p class="today-date" id="today-date"></p>
+      </section>
+
+      <!-- 메모 입력 영역 -->
+      <section class="editor-section">
+        <textarea id="memo-input" class="memo-input" placeholder="오늘의 메모를 입력하세요..."></textarea>
+        <div class="editor-actions">
+          <button id="star-btn" class="btn-icon btn-star" aria-label="중요 메모 표시">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+          <button id="save-btn" class="btn-primary" aria-label="메모 저장">저장</button>
+        </div>
+      </section>
+
+      <!-- 검색 & 필터 영역 -->
+      <section class="search-section">
+        <button id="filter-star-btn" class="btn-filter" aria-label="중요 메모만 보기">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          즐겨찾기
+        </button>
+        <div class="search-wrap">
+          <input type="search" id="search-input" class="search-input" placeholder="검색">
+          <button class="btn-search" aria-label="검색">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- 오늘의 Todo 섹션 -->
+      <section class="todo-section">
+        <h2 class="section-title">오늘의 Todo</h2>
+        <ul id="todo-list" class="todo-list"></ul>
+      </section>
+
+      <!-- 메모 목록 -->
+      <section class="memo-list-section">
+        <ul id="memo-list" class="memo-list"></ul>
+      </section>
+
+    </main>
+
+    <!-- 상세보기 화면 -->
+    <div id="detail-view" class="view"></div>
+
+    <!-- 더보기 메뉴 -->
+    <div id="menu-overlay" class="overlay hidden"></div>
+    <nav id="more-menu" class="more-menu hidden">
+      <button id="export-btn" class="menu-item">메모 내보내기</button>
+      <button id="import-btn" class="menu-item">메모 가져오기</button>
+      <div class="menu-divider"></div>
+      <div class="menu-item font-size-wrap">
+        <span>글자 크기</span>
+        <div class="font-size-btns">
+          <button data-size="small">작게</button>
+          <button data-size="medium">보통</button>
+          <button data-size="large">크게</button>
+        </div>
+      </div>
+      <button id="darkmode-btn" class="menu-item">다크모드</button>
+    </nav>
+
+    <!-- 숨김 파일 입력 (이미지/JSON 가져오기) -->
+    <input type="file" id="import-file" accept=".json" hidden>
+
+  </div><!-- /#app -->
+
+  <!-- Service Worker 등록 -->
+  <script src="js/sw-register.js"></script>
+  <!-- 메인 앱 -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>
