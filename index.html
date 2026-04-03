@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Today is... - 오늘의 메모와 할 일을 기록하는 PWA 메모장">
-
   <title>Today is...</title>
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="manifest.json">
-
-  <!-- 앱 아이콘 -->
   <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 
   <!-- Pretendard 폰트 -->
@@ -22,109 +19,396 @@
 </head>
 <body>
 
-  <!-- 메인 앱 컨테이너 -->
-  <div id="app">
+<div id="app">
 
-    <!-- 헤더 -->
+  <!-- ===== 메인 화면 (달력) ===== -->
+  <div id="main-view" class="view active">
     <header class="header">
-      <div class="header-left">
-        <span class="app-title">Today is...</span>
-      </div>
-      <div class="header-right">
-        <button id="install-btn" class="btn-icon" hidden aria-label="앱 설치">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2v13M7 11l5 5 5-5M4 18h16"/>
-          </svg>
-        </button>
-        <button id="menu-btn" class="btn-icon" aria-label="더보기 메뉴">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
-          </svg>
-        </button>
-      </div>
+      <span class="header-spacer"></span>
+      <span class="app-title">Today is...</span>
+      <button id="settings-btn" class="btn-icon" aria-label="설정">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
     </header>
 
-    <!-- 메인 화면 -->
-    <main id="main-view" class="view active">
-
-      <!-- 날짜 표시 -->
-      <section class="date-section">
-        <p class="today-date" id="today-date"></p>
+    <main class="view-body">
+      <!-- 달력 -->
+      <section class="calendar-section">
+        <div class="calendar-nav">
+          <button id="prev-month" class="btn-icon" aria-label="이전 달">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <h2 id="calendar-title" class="calendar-title"></h2>
+          <button id="next-month" class="btn-icon" aria-label="다음 달">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+        <div class="calendar-weekdays">
+          <span>일</span><span>월</span><span>화</span>
+          <span>수</span><span>목</span><span>금</span><span>토</span>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
       </section>
 
-      <!-- 메모 입력 영역 -->
-      <section class="editor-section">
-        <textarea id="memo-input" class="memo-input" placeholder="오늘의 메모를 입력하세요..."></textarea>
+      <!-- 오늘의 Todo -->
+      <section class="todo-section">
+        <div class="section-header">
+          <h3 class="section-title">오늘의 Todo</h3>
+          <button id="add-todo-btn" class="btn-text">+ 추가</button>
+        </div>
+        <ul id="todo-list" class="todo-list">
+          <!-- JS로 렌더링 -->
+        </ul>
+        <!-- Todo 입력창 (기본 숨김) -->
+        <div id="todo-input-wrap" class="todo-input-wrap hidden">
+          <input type="text" id="todo-input" class="todo-input" placeholder="할 일을 입력하세요">
+          <button id="todo-save-btn" class="btn-primary-sm">추가</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <!-- ===== 날짜별 메모 화면 (미사용 — 달력→상세 직접 이동) ===== -->
+  <div id="day-view" class="view" style="display:none !important">
+    <header class="header">
+      <button id="day-back-btn" class="btn-icon" aria-label="닫기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <span class="header-spacer"></span>
+      <button id="settings-day-btn" class="btn-icon" aria-label="설정">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </header>
+
+    <main class="view-body day-view-body">
+
+      <!-- 날짜 구분선 -->
+      <div class="day-date-divider">
+        <span id="day-date-label" class="day-date-text"></span>
+      </div>
+
+      <!-- 항상 보이는 메모 입력 영역 -->
+      <section class="memo-editor">
+        <textarea id="memo-input" class="memo-input" placeholder="메모를 입력하세요..."></textarea>
         <div class="editor-actions">
-          <button id="star-btn" class="btn-icon btn-star" aria-label="중요 메모 표시">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <button id="star-btn" class="btn-icon btn-star" aria-label="중요 표시">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
           </button>
-          <button id="save-btn" class="btn-primary" aria-label="메모 저장">저장</button>
+          <button id="save-btn" class="btn-primary-sm">저장</button>
         </div>
       </section>
 
-      <!-- 검색 & 필터 영역 -->
+      <!-- 즐겨찾기 필터 + 검색 (한 줄) -->
       <section class="search-section">
-        <button id="filter-star-btn" class="btn-filter" aria-label="중요 메모만 보기">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button id="filter-star-btn" class="btn-filter" aria-label="즐겨찾기만 보기">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
           </svg>
           즐겨찾기
         </button>
         <div class="search-wrap">
           <input type="search" id="search-input" class="search-input" placeholder="검색">
-          <button class="btn-search" aria-label="검색">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <span class="btn-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-          </button>
+          </span>
         </div>
       </section>
 
-      <!-- 오늘의 Todo 섹션 -->
-      <section class="todo-section">
-        <h2 class="section-title">오늘의 Todo</h2>
-        <ul id="todo-list" class="todo-list"></ul>
-      </section>
-
-      <!-- 메모 목록 -->
+      <!-- 오늘의 Todo + 메모 목록 -->
       <section class="memo-list-section">
+        <p class="day-section-label">〈오늘의 Todo〉</p>
         <ul id="memo-list" class="memo-list"></ul>
       </section>
 
     </main>
+  </div>
 
-    <!-- 상세보기 화면 -->
-    <div id="detail-view" class="view"></div>
 
-    <!-- 더보기 메뉴 -->
-    <div id="menu-overlay" class="overlay hidden"></div>
-    <nav id="more-menu" class="more-menu hidden">
-      <button id="export-btn" class="menu-item">메모 내보내기</button>
-      <button id="import-btn" class="menu-item">메모 가져오기</button>
-      <div class="menu-divider"></div>
-      <div class="menu-item font-size-wrap">
-        <span>글자 크기</span>
-        <div class="font-size-btns">
-          <button data-size="small">작게</button>
-          <button data-size="medium">보통</button>
-          <button data-size="large">크게</button>
+  <!-- ===== 메모 상세 / 편집 화면 ===== -->
+  <div id="detail-view" class="view">
+    <header class="header">
+      <!-- 좌측: 저장 및 공유 -->
+      <button id="save-share-btn" class="btn-save-share" aria-label="저장 및 공유">저장 및 공유</button>
+      <span class="header-spacer"></span>
+      <!-- 우측: 뒤로가기 -->
+      <button id="detail-back-btn" class="btn-icon" aria-label="뒤로가기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+    </header>
+
+    <main class="view-body detail-view-body" id="detail-body">
+
+      <!-- 1. 제목 -->
+      <div class="detail-field">
+        <input type="text" id="detail-title-input" class="detail-title-input" placeholder="제목 (미입력 시 자동생성)">
+      </div>
+
+      <!-- 2. URL -->
+      <div class="detail-field detail-field-row">
+        <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <input type="url" id="detail-url-input" class="detail-url-input" placeholder="링크 URL 입력">
+      </div>
+
+      <!-- 3. 알림 설정 -->
+      <div class="detail-field detail-field-row">
+        <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="field-label">알림</span>
+        <div class="field-right">
+          <button id="detail-alarm-toggle" class="toggle-btn toggle-sm" role="switch" aria-checked="false">
+            <span class="toggle-knob"></span>
+          </button>
+          <input type="datetime-local" id="detail-alarm-time" class="alarm-time-input hidden">
         </div>
       </div>
-      <button id="darkmode-btn" class="menu-item">다크모드</button>
-    </nav>
 
-    <!-- 숨김 파일 입력 (이미지/JSON 가져오기) -->
-    <input type="file" id="import-file" accept=".json" hidden>
+      <!-- 4. 캘린더 컬러 -->
+      <div class="detail-field detail-field-row">
+        <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a10 10 0 0 1 0 20"/>
+        </svg>
+        <span class="field-label">캘린더 색상</span>
+        <div class="color-picker" id="color-picker">
+          <button class="color-dot selected" data-color="#5C8B6E" style="background:#5C8B6E"></button>
+          <button class="color-dot" data-color="#E57373" style="background:#E57373"></button>
+          <button class="color-dot" data-color="#64B5F6" style="background:#64B5F6"></button>
+          <button class="color-dot" data-color="#BA68C8" style="background:#BA68C8"></button>
+          <button class="color-dot" data-color="#FFB74D" style="background:#FFB74D"></button>
+          <button class="color-dot" data-color="#F06292" style="background:#F06292"></button>
+        </div>
+      </div>
 
-  </div><!-- /#app -->
+      <!-- 5. 첨부파일 -->
+      <div class="detail-field">
+        <div class="attach-btns">
+          <label class="btn-attach" for="attach-photo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            사진
+          </label>
+          <input type="file" id="attach-photo" accept="image/*" hidden multiple>
 
-  <!-- Service Worker 등록 -->
-  <script src="js/sw-register.js"></script>
-  <!-- 메인 앱 -->
-  <script src="js/app.js"></script>
+          <button class="btn-attach" id="attach-record-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+            음성 녹음
+          </button>
+
+          <label class="btn-attach" for="attach-video">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+            </svg>
+            동영상
+          </label>
+          <input type="file" id="attach-video" accept="video/*" hidden>
+        </div>
+        <!-- 첨부 미리보기 -->
+        <div id="attach-preview" class="attach-preview"></div>
+        <!-- 녹음 UI -->
+        <div id="record-ui" class="record-ui hidden">
+          <span id="record-timer" class="record-timer">00:00</span>
+          <button id="record-stop-btn" class="btn-record-stop">■ 정지</button>
+        </div>
+      </div>
+
+      <!-- 6. 메모 본문 -->
+      <div class="detail-field detail-field-memo">
+        <textarea id="detail-memo-input" class="detail-memo-input" placeholder="메모를 입력하세요..."></textarea>
+      </div>
+
+      <!-- 하단 액션 -->
+      <div class="detail-actions">
+        <button class="btn-action btn-edit" id="detail-edit-btn">수정</button>
+        <button class="btn-action" id="detail-copy-btn">복사</button>
+        <button class="btn-action" id="detail-translate-btn">번역</button>
+        <button class="btn-action" id="detail-share-btn">공유</button>
+        <button class="btn-action btn-danger" id="detail-delete-btn">삭제</button>
+      </div>
+      <div id="translate-result" class="translate-result hidden"></div>
+
+    </main>
+  </div>
+
+
+  <!-- ===== 설정 화면 ===== -->
+  <div id="settings-view" class="view">
+    <header class="header">
+      <span class="header-spacer"></span>
+      <span class="header-title">설정</span>
+      <button id="settings-back-btn" class="btn-icon" aria-label="뒤로가기">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </header>
+    <main class="view-body settings-body">
+
+      <section class="settings-section">
+        <h3 class="settings-section-title">화면</h3>
+        <div class="settings-item">
+          <span class="settings-label">다크모드</span>
+          <button id="darkmode-toggle" class="toggle-btn" role="switch" aria-checked="false">
+            <span class="toggle-knob"></span>
+          </button>
+        </div>
+        <div class="settings-item">
+          <span class="settings-label">글자 크기</span>
+          <div class="font-size-btns">
+            <button data-size="small">작게</button>
+            <button data-size="medium">보통</button>
+            <button data-size="large">크게</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3 class="settings-section-title">번역</h3>
+        <div class="settings-item">
+          <span class="settings-label">번역 기능 사용</span>
+          <button id="translate-toggle" class="toggle-btn" role="switch" aria-checked="true">
+            <span class="toggle-knob"></span>
+          </button>
+        </div>
+        <div class="settings-item">
+          <span class="settings-label">번역 대상 언어</span>
+          <select id="translate-lang" class="settings-select">
+            <option value="en">영어</option>
+            <option value="ja">일본어</option>
+            <option value="zh-CN">중국어 (간체)</option>
+            <option value="es">스페인어</option>
+            <option value="fr">프랑스어</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3 class="settings-section-title">데이터</h3>
+        <button id="export-btn" class="settings-item settings-item-btn">
+          <span class="settings-label">메모 내보내기</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+        <label class="settings-item settings-item-btn" for="import-file">
+          <span class="settings-label">메모 가져오기</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </label>
+        <input type="file" id="import-file" accept=".json" hidden>
+      </section>
+
+      <section class="settings-section">
+        <h3 class="settings-section-title">공유</h3>
+        <button id="share-app-btn" class="settings-item settings-item-btn">
+          <span class="settings-label">친구에게 앱 공유</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+        </button>
+      </section>
+
+      <!-- 앱 설치 버튼 — beforeinstallprompt 가능할 때만 표시 -->
+      <section id="install-section" class="settings-section" style="display:none;">
+        <h3 class="settings-section-title">앱 설치</h3>
+        <button id="install-btn" class="settings-item settings-item-btn">
+          <span class="settings-label">홈 화면에 추가</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v13M7 9l5 5 5-5"/>
+            <path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+          </svg>
+        </button>
+      </section>
+
+      <section class="settings-section">
+        <h3 class="settings-section-title">위험 구역</h3>
+        <button id="delete-all-btn" class="settings-item settings-item-btn settings-item-danger">
+          <span class="settings-label">모든 메모 삭제</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </section>
+
+    </main>
+  </div>
+
+
+  <!-- ===== 저장 및 공유 모달 ===== -->
+  <div id="save-share-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <h3 class="modal-title">저장 및 공유</h3>
+      <ul class="modal-size-list" id="size-list">
+        <li class="modal-size-item selected" data-w="1080" data-h="1920">
+          <div>
+            <p class="size-label">스토리 / 릴스</p>
+            <p class="size-desc">1080 × 1920px (9:16)</p>
+          </div>
+          <span class="size-check">✓</span>
+        </li>
+        <li class="modal-size-item" data-w="1080" data-h="1350">
+          <div>
+            <p class="size-label">피드 세로</p>
+            <p class="size-desc">1080 × 1350px (4:5)</p>
+          </div>
+          <span class="size-check hidden">✓</span>
+        </li>
+        <li class="modal-size-item" data-w="1080" data-h="1080">
+          <div>
+            <p class="size-label">피드 정사각형</p>
+            <p class="size-desc">1080 × 1080px (1:1)</p>
+          </div>
+          <span class="size-check hidden">✓</span>
+        </li>
+      </ul>
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="btn-outline">취소</button>
+        <button id="modal-save-btn" class="btn-primary">저장하기</button>
+        <button id="modal-share-btn" class="btn-primary">공유하기</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- html2canvas (메모 이미지 저장) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Service Worker 등록 -->
+<script src="js/sw-register.js?v=2"></script>
+<!-- 메인 앱 -->
+<script src="js/app.js?v=2"></script>
 
 </body>
 </html>
