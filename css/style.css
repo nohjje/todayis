@@ -55,6 +55,149 @@ ul  { list-style: none; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
 
 /* ===========================
+   스플래시 화면
+   =========================== */
+#splash-view {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+  background: #3d6b54;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.8s ease;
+}
+
+#splash-view.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 배경 원형 장식 */
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.splash-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+
+.splash-circle-1 {
+  width: 320px;
+  height: 320px;
+  top: -80px;
+  right: -80px;
+  animation: splash-float 6s ease-in-out infinite;
+}
+
+.splash-circle-2 {
+  width: 220px;
+  height: 220px;
+  bottom: -60px;
+  left: -60px;
+  animation: splash-float 8s ease-in-out infinite reverse;
+}
+
+@keyframes splash-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-18px) scale(1.04); }
+}
+
+/* 콘텐츠 */
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: splash-in 1s ease both;
+}
+
+@keyframes splash-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-date {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.08em;
+}
+
+.splash-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.splash-dot {
+  color: rgba(255,255,255,0.55);
+}
+
+/* 글귀 */
+.splash-quote-wrap {
+  margin-top: 32px;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: splash-in 1.4s ease both;
+}
+
+.splash-quote {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.75;
+  text-align: center;
+  letter-spacing: 0.02em;
+  max-width: 280px;
+  word-break: keep-all;
+}
+
+.splash-quote::before { content: '\201C'; margin-right: 2px; color: rgba(255,255,255,0.4); }
+.splash-quote::after  { content: '\201D'; margin-left: 2px;  color: rgba(255,255,255,0.4); }
+
+.splash-quote-author {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.06em;
+}
+
+/* 스킵 버튼 */
+.splash-skip-btn {
+  position: absolute;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 48px;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: 50px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  animation: splash-in 1.8s ease both;
+  white-space: nowrap;
+}
+
+.splash-skip-btn:hover  { background: rgba(255,255,255,0.25); }
+.splash-skip-btn:active { transform: translateX(-50%) scale(0.96); }
+
+/* ===========================
    앱 & 뷰 레이아웃
    =========================== */
 #app {
@@ -182,17 +325,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .btn-text:hover { color: var(--text); }
 
 /* 저장 및 공유 버튼 */
-.btn-save-share {
-  padding: 7px 14px;
-  background: var(--primary);
-  color: var(--primary-text);
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: opacity 0.15s;
-}
-.btn-save-share:hover  { opacity: 0.82; }
-.btn-save-share:active { opacity: 0.65; }
 
 /* ===========================
    달력 섹션
@@ -815,10 +947,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .btn-action:hover  { background: var(--bg-secondary); }
 .btn-action:active { background: var(--border); }
 
-.btn-edit          { color: var(--primary); border-color: var(--primary); font-weight: 600; }
-.btn-edit:hover    { background: rgba(92,139,110,0.08); }
+.btn-edit          { color: var(--text-secondary); border-color: var(--border); }
+.btn-edit:hover    { background: var(--bg-secondary); }
 .btn-danger        { color: var(--danger); border-color: var(--danger); }
 .btn-danger:hover  { background: rgba(229,57,53,0.08); }
+.btn-save          { color: var(--primary-text); background: var(--primary); border-color: var(--primary); font-weight: 600; }
+.btn-save:hover    { opacity: 0.85; }
 
 /* 번역 결과 */
 .translate-result {
@@ -979,6 +1113,119 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   background: var(--bg);
   border-radius: 20px 20px 0 0;
   padding: 24px 20px 44px;
+}
+
+/* 앱 공유 모달 */
+.share-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.share-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.share-modal-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.share-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 4px 0 8px;
+}
+
+.share-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.share-option-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.share-option-btn:active .share-option-icon {
+  transform: scale(0.93);
+  opacity: 0.75;
+}
+
+.share-icon-kakao  { background: #FEE500; color: #3C1E1E; }
+.share-icon-copy   { background: var(--bg-secondary); color: var(--text); border: 1.5px solid var(--border); }
+.share-icon-more   { background: var(--bg-secondary); color: var(--text); border: 1.5px solid var(--border); }
+
+.share-option-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 삭제 확인 모달 */
+.modal-confirm {
+  border-radius: 16px;
+  padding: 28px 24px 24px;
+  text-align: center;
+  margin: 0 20px;
+}
+
+.confirm-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.confirm-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.confirm-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.confirm-btn:active { opacity: 0.7; }
+
+.confirm-btn-cancel {
+  background: var(--bg-secondary);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.confirm-btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border: none;
 }
 
 .modal-title {

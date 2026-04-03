@@ -66,7 +66,78 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCalendar();
   renderTodos();
   bindEvents();
+
+  // 스플래시 화면
+  initSplash();
 });
+
+// ===========================
+// 스플래시 — 오늘의 글귀
+// ===========================
+const QUOTES = [
+  { text: '오늘 하루도 충분히 잘하고 있어요.', author: '— 스스로에게' },
+  { text: '작은 기록이 쌓여 큰 이야기가 됩니다.', author: '— 오늘의 메모' },
+  { text: '어제보다 나은 오늘이면 충분합니다.', author: '— 마르쿠스 아우렐리우스' },
+  { text: '시작이 반이다.', author: '— 아리스토텔레스' },
+  { text: '지금 이 순간이 가장 소중한 시간입니다.', author: '— 레오 톨스토이' },
+  { text: '매일 조금씩, 그것으로 충분합니다.', author: '— 앤 라모트' },
+  { text: '생각을 글로 쓰면 생각이 명확해집니다.', author: '— 프란시스 베이컨' },
+  { text: '오늘의 기록이 내일의 나를 만듭니다.', author: '— Today is...' },
+  { text: '좋은 하루는 아침의 기록에서 시작됩니다.', author: '— 벤자민 프랭클린' },
+  { text: '당신은 이미 충분히 대단한 사람입니다.', author: '— 스스로에게' },
+  { text: '천 리 길도 한 걸음부터.', author: '— 노자' },
+  { text: '오늘의 작은 습관이 인생을 바꿉니다.', author: '— 제임스 클리어' },
+  { text: '내가 쓴 글이 곧 나의 역사입니다.', author: '— Today is...' },
+  { text: '느려도 괜찮아요. 멈추지만 않으면 됩니다.', author: '— 공자' },
+  { text: '오늘도 기록하는 당신, 이미 특별합니다.', author: '— Today is...' },
+  { text: '잘 쓰인 하루는 행복한 잠을 가져다 줍니다.', author: '— 레오나르도 다빈치' },
+  { text: '삶은 기억하는 것들로 이루어집니다.', author: '— 가브리엘 가르시아 마르케스' },
+  { text: '오늘 할 수 있는 일을 내일로 미루지 마세요.', author: '— 벤자민 프랭클린' },
+  { text: '좋은 것들은 천천히 옵니다.', author: '— 속담' },
+  { text: '기록은 기억을 이깁니다.', author: '— 데이빗 앨런' },
+  { text: '지금 이 순간에 집중하세요.', author: '— 에크하르트 톨레' },
+  { text: '모든 위대한 여정은 한 줄 메모에서 시작됐습니다.', author: '— Today is...' },
+  { text: '오늘의 감사가 내일의 기쁨이 됩니다.', author: '— 멜로디 비티' },
+  { text: '글 쓰는 사람은 두 번 산다.', author: '— 속담' },
+  { text: '당신의 이야기는 들을 가치가 있습니다.', author: '— 브레네 브라운' },
+  { text: '한 번에 한 가지씩. 오늘을 살아가세요.', author: '— Today is...' },
+  { text: '비가 와야 무지개가 뜬다.', author: '— 돌리 파튼' },
+  { text: '가장 중요한 하루는 바로 오늘입니다.', author: '— 레프 톨스토이' },
+  { text: '메모하는 습관이 당신의 잠재력을 깨웁니다.', author: '— Today is...' },
+  { text: '완벽하지 않아도 괜찮아요. 오늘도 수고했어요.', author: '— 스스로에게' },
+];
+
+// ===========================
+// 스플래시 화면
+// ===========================
+function initSplash() {
+  const splash     = document.getElementById('splash-view');
+  const dateEl     = document.getElementById('splash-date');
+  const quoteEl    = document.getElementById('splash-quote');
+  const authorEl   = document.getElementById('splash-quote-author');
+  const skipBtn    = document.getElementById('splash-skip-btn');
+
+  // 오늘 날짜 표시
+  const now  = new Date();
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  dateEl.textContent = `${now.getFullYear()}. ${String(now.getMonth()+1).padStart(2,'0')}. ${String(now.getDate()).padStart(2,'0')} ${days[now.getDay()]}`;
+
+  // 날짜 기반 글귀 선택 (매일 다르게)
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const q = QUOTES[dayOfYear % QUOTES.length];
+  quoteEl.textContent  = q.text;
+  authorEl.textContent = q.author;
+
+  // 스킵 버튼
+  skipBtn.addEventListener('click', dismissSplash, { once: true });
+}
+
+function dismissSplash() {
+  const splash = document.getElementById('splash-view');
+  splash.classList.add('hide');
+  document.getElementById('main-view').classList.add('active');
+  setTimeout(() => splash.remove(), 850);
+}
 
 // ===========================
 // 데이터 로드/저장
@@ -233,23 +304,31 @@ function bindEvents() {
   document.getElementById('attach-record-btn').addEventListener('click', startRecording);
   document.getElementById('record-stop-btn').addEventListener('click', stopRecording);
 
-  // 하단 액션 — 수정
-  document.getElementById('detail-edit-btn').addEventListener('click', confirmDetailEdit);
+  // 하단 액션 — 수정 (편집 포커스)
+  document.getElementById('detail-edit-btn').addEventListener('click', () => {
+    const ta = document.getElementById('detail-memo-input');
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  });
+
+  // 하단 액션 — 저장
+  document.getElementById('detail-save-btn').addEventListener('click', confirmDetailSave);
 
   // 하단 액션
-  document.getElementById('detail-copy-btn').addEventListener('click', () => {
-    const content = document.getElementById('detail-memo-input').value;
-    copyMemo(content);
-  });
   document.getElementById('detail-translate-btn').addEventListener('click', () => {
     const content = document.getElementById('detail-memo-input').value;
     translateMemo(content);
   });
-  document.getElementById('detail-share-btn').addEventListener('click', () => {
-    const memo = state.memos.find(m => m.id === state.currentMemoId);
-    if (memo) shareMemo(memo);
-  });
   document.getElementById('detail-delete-btn').addEventListener('click', () => {
+    document.getElementById('delete-confirm-modal').classList.remove('hidden');
+  });
+
+  document.getElementById('delete-cancel-btn').addEventListener('click', () => {
+    document.getElementById('delete-confirm-modal').classList.add('hidden');
+  });
+
+  document.getElementById('delete-confirm-btn').addEventListener('click', () => {
+    document.getElementById('delete-confirm-modal').classList.add('hidden');
     deleteMemo(state.currentMemoId);
   });
 
@@ -299,7 +378,54 @@ function bindEvents() {
   document.getElementById('import-file').addEventListener('change', importMemos);
 
   // 설정: 친구에게 앱 공유
-  document.getElementById('share-app-btn').addEventListener('click', shareApp);
+  document.getElementById('share-app-btn').addEventListener('click', () => {
+    document.getElementById('share-app-modal').classList.remove('hidden');
+  });
+
+  // 공유 모달 닫기
+  document.getElementById('share-modal-close').addEventListener('click', () => {
+    document.getElementById('share-app-modal').classList.add('hidden');
+  });
+
+  // 카카오톡 공유
+  document.getElementById('share-kakao-btn').addEventListener('click', () => {
+    document.getElementById('share-app-modal').classList.add('hidden');
+    const appUrl = location.origin + location.pathname;
+    const kakaoScheme = `kakaolink://send?text=${encodeURIComponent('오늘의 메모를 기록하는 PWA 앱이에요!\n' + appUrl)}`;
+    // 모바일: Web Share API로 카카오톡 선택 유도
+    if (navigator.share) {
+      navigator.share({
+        title: 'Today is...',
+        text: '오늘의 메모를 기록하는 PWA 앱이에요!',
+        url: appUrl,
+      }).catch(() => {});
+    } else {
+      // 데스크탑: URL 복사 대체
+      navigator.clipboard.writeText(appUrl)
+        .then(() => showToast('링크가 복사되었습니다. 카카오톡에 붙여넣기 해주세요.'));
+    }
+  });
+
+  // URL 복사
+  document.getElementById('share-copy-btn').addEventListener('click', () => {
+    const appUrl = location.origin + location.pathname;
+    navigator.clipboard.writeText(appUrl)
+      .then(() => {
+        document.getElementById('share-app-modal').classList.add('hidden');
+        showToast('링크가 복사되었습니다!');
+      });
+  });
+
+  // 더 보내기 (Web Share API)
+  document.getElementById('share-more-btn').addEventListener('click', () => {
+    document.getElementById('share-app-modal').classList.add('hidden');
+    shareApp();
+  });
+
+  // iOS 안내 모달 닫기
+  document.getElementById('ios-install-close').addEventListener('click', () => {
+    document.getElementById('ios-install-modal').classList.add('hidden');
+  });
 
   // 설정: 전체 삭제
   document.getElementById('delete-all-btn').addEventListener('click', () => {
@@ -328,12 +454,19 @@ function bindEvents() {
 
   // PWA 설치 버튼
   document.getElementById('install-btn').addEventListener('click', async () => {
-    if (!installPromptEvent) return;
-    installPromptEvent.prompt();
-    const { outcome } = await installPromptEvent.userChoice;
-    if (outcome === 'accepted') {
-      installPromptEvent = null;
-      document.getElementById('install-section').style.display = 'none';
+    if (installPromptEvent) {
+      // Android Chrome: 설치 프롬프트 실행
+      installPromptEvent.prompt();
+      const { outcome } = await installPromptEvent.userChoice;
+      if (outcome === 'accepted') {
+        installPromptEvent = null;
+      }
+    } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+      // iOS Safari: 안내 모달
+      document.getElementById('ios-install-modal').classList.remove('hidden');
+    } else {
+      // 이미 설치됨 또는 지원 안 함
+      showToast('이미 설치되었거나 브라우저에서 지원하지 않습니다.');
     }
   });
 
@@ -558,14 +691,14 @@ function openDetail(id) {
 }
 
 // ===========================
-// 수정 버튼 — 명시적 저장
+// 저장 버튼 — 명시적 저장
 // ===========================
-function confirmDetailEdit() {
+function confirmDetailSave() {
   const content = document.getElementById('detail-memo-input').value.trim();
   if (!content) { showToast('메모 내용을 입력해주세요.'); return; }
   saveDetailChanges();
   releaseWakeLock();
-  showToast('수정되었습니다.');
+  showToast('저장되었습니다.');
   vibrate([100]);
 }
 
@@ -597,7 +730,6 @@ function saveDetailChanges() {
 // 메모 삭제 (Delete)
 // ===========================
 function deleteMemo(id) {
-  if (!confirm('메모를 삭제할까요?')) return;
   state.memos = state.memos.filter(m => m.id !== id);
   saveMemos();
   renderCalendar();
