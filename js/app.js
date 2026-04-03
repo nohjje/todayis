@@ -139,6 +139,40 @@ function dismissSplash() {
   setTimeout(() => splash.remove(), 850);
 }
 
+function showSplashAgain() {
+  // 기존 스플래시가 남아있으면 제거
+  const old = document.getElementById('splash-view');
+  if (old) old.remove();
+
+  // 스플래시 엘리먼트 새로 생성
+  const splash = document.createElement('div');
+  splash.id = 'splash-view';
+  splash.innerHTML = `
+    <div class="splash-bg">
+      <div class="splash-circle splash-circle-1"></div>
+      <div class="splash-circle splash-circle-2"></div>
+    </div>
+    <div class="splash-inner">
+      <div class="splash-content">
+        <p class="splash-date" id="splash-date"></p>
+        <h1 class="splash-title">Today is<span class="splash-dot">...</span></h1>
+        <div class="splash-quote-wrap">
+          <p class="splash-quote" id="splash-quote"></p>
+          <p class="splash-quote-author" id="splash-quote-author"></p>
+        </div>
+      </div>
+      <button id="splash-skip-btn" class="splash-skip-btn">Skip</button>
+    </div>
+  `;
+  document.getElementById('app').appendChild(splash);
+
+  // 메인 뷰 숨기기
+  document.getElementById('main-view').classList.remove('active');
+
+  // 초기화
+  initSplash();
+}
+
 // ===========================
 // 데이터 로드/저장
 // ===========================
@@ -206,6 +240,11 @@ function bindEvents() {
     state.calMonth++;
     if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
     renderCalendar();
+  });
+
+  // 타이틀 클릭 → 스플래시로 이동
+  document.getElementById('home-title-btn').addEventListener('click', () => {
+    showSplashAgain();
   });
 
   // 설정 버튼
