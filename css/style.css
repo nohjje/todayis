@@ -61,7 +61,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: absolute;
   inset: 0;
   z-index: 999;
-  background: #3d6b54;
+  background: linear-gradient(160deg, #5C8B6E 0%, #4a7259 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,6 +75,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   pointer-events: none;
 }
 
+/* 내부 레이아웃 — flex 세로 */
+.splash-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding: 80px 32px 60px;
+}
+
 /* 배경 원형 장식 */
 .splash-bg {
   position: absolute;
@@ -85,28 +98,28 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .splash-circle {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.07);
 }
 
 .splash-circle-1 {
-  width: 320px;
-  height: 320px;
-  top: -80px;
-  right: -80px;
-  animation: splash-float 6s ease-in-out infinite;
+  width: 340px;
+  height: 340px;
+  top: -100px;
+  right: -100px;
+  animation: splash-float 7s ease-in-out infinite;
 }
 
 .splash-circle-2 {
-  width: 220px;
-  height: 220px;
-  bottom: -60px;
-  left: -60px;
-  animation: splash-float 8s ease-in-out infinite reverse;
+  width: 240px;
+  height: 240px;
+  bottom: -80px;
+  left: -80px;
+  animation: splash-float 9s ease-in-out infinite reverse;
 }
 
 @keyframes splash-float {
   0%, 100% { transform: translateY(0) scale(1); }
-  50%       { transform: translateY(-18px) scale(1.04); }
+  50%       { transform: translateY(-16px) scale(1.03); }
 }
 
 /* 콘텐츠 */
@@ -114,88 +127,87 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   animation: splash-in 1s ease both;
+  flex: 1;
+  justify-content: center;
 }
 
 @keyframes splash-in {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .splash-date {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
-  color: rgba(255,255,255,0.65);
-  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .splash-title {
-  font-size: 42px;
+  font-size: 44px;
   font-weight: 700;
   color: #ffffff;
-  letter-spacing: -1px;
+  letter-spacing: -1.5px;
   line-height: 1;
 }
 
 .splash-dot {
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.45);
 }
 
 /* 글귀 */
 .splash-quote-wrap {
-  margin-top: 32px;
-  padding: 0 8px;
+  margin-top: 36px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  animation: splash-in 1.4s ease both;
+  animation: splash-in 1.5s ease both;
 }
 
 .splash-quote {
   font-size: 15px;
   font-weight: 300;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.75;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.8;
   text-align: center;
-  letter-spacing: 0.02em;
-  max-width: 280px;
+  letter-spacing: 0.01em;
+  max-width: 260px;
   word-break: keep-all;
 }
 
-.splash-quote::before { content: '\201C'; margin-right: 2px; color: rgba(255,255,255,0.4); }
-.splash-quote::after  { content: '\201D'; margin-left: 2px;  color: rgba(255,255,255,0.4); }
+.splash-quote::before { content: '\201C'; margin-right: 2px; color: rgba(255,255,255,0.35); }
+.splash-quote::after  { content: '\201D'; margin-left:  2px; color: rgba(255,255,255,0.35); }
 
 .splash-quote-author {
   font-size: 12px;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.4);
   letter-spacing: 0.06em;
 }
 
-/* 스킵 버튼 */
+/* Skip 버튼 — flex 중앙 */
 .splash-skip-btn {
-  position: absolute;
-  bottom: 52px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 14px 48px;
-  background: rgba(255,255,255,0.15);
-  border: 1.5px solid rgba(255,255,255,0.35);
+  padding: 14px 52px;
+  background: rgba(255,255,255,0.14);
+  border: 1.5px solid rgba(255,255,255,0.32);
   border-radius: 50px;
-  color: #ffffff;
+  color: rgba(255,255,255,0.9);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   font-family: inherit;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
-  animation: splash-in 1.8s ease both;
+  animation: splash-in 2s ease both;
   white-space: nowrap;
+  align-self: center;
 }
 
-.splash-skip-btn:hover  { background: rgba(255,255,255,0.25); }
-.splash-skip-btn:active { transform: translateX(-50%) scale(0.96); }
+.splash-skip-btn:hover  { background: rgba(255,255,255,0.22); }
+.splash-skip-btn:active { transform: scale(0.96); }
 
 /* ===========================
    앱 & 뷰 레이아웃
