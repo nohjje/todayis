@@ -240,6 +240,10 @@
 
 ---
 
+## 배포 정보
+- **Vercel URL**: https://todayis-two.vercel.app/
+- **GitHub**: https://github.com/nohjje/todayis
+
 ## 추가기능 
 
 
