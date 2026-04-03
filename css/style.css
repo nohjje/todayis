@@ -1016,7 +1016,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ===========================
    설정 화면
    =========================== */
-.settings-body { gap: 8px; padding-top: 16px; }
+.settings-body {
+  gap: 12px;
+  padding: 16px 16px 60px;
+}
 
 .settings-section {
   border: 1px solid var(--border);
@@ -1031,34 +1034,41 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--text-secondary);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 12px 16px 8px;
+  padding: 12px 16px 10px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
 }
 
 .settings-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  border-top: 1px solid var(--border);
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--border);
   width: 100%;
   text-align: left;
   transition: background 0.15s;
+  gap: 12px;
 }
+
+.settings-item:last-child { border-bottom: none; }
 
 .settings-item-btn { cursor: pointer; }
 .settings-item-btn:hover { background: var(--bg-secondary); }
+.settings-item-btn:active { background: var(--border); }
 
 .settings-label {
   font-size: 15px;
   color: var(--text);
   font-weight: 400;
+  flex: 1;
 }
 
 .settings-item-danger .settings-label { color: var(--danger); }
 
 /* 설정 셀렉트 */
 .settings-select {
-  padding: 6px 10px;
+  padding: 7px 10px;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   background: var(--bg-secondary);
@@ -1067,6 +1077,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-family: inherit;
   outline: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* 토글 스위치 */
@@ -1094,7 +1105,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .toggle-btn[aria-checked="true"] .toggle-knob { transform: translateX(20px); }
 
 /* 글자 크기 버튼 */
-.font-size-btns { display: flex; gap: 6px; }
+.font-size-btns { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
 
 .font-size-btns button {
   padding: 5px 12px;
